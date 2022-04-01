@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veronica</title>
+
+    <style>
+        @font-face {
+            font-family: "VerJar";
+            src: url("font/AndroidAssassin-WXXY.ttf");
+
+        }
+
+        body {
+            background-color: black;
+            background-image: url("https://i.pinimg.com/originals/70/eb/0b/70eb0b53eb57c91db403928c5d02a19a.gif");
+            background-repeat: no-repeat;
+            background-size: 70vw 100vh;
+            background-position-x: center;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <div style="display: flex;justify-content: space-between;">
+        <div>
+            <h1 style="color: white; font-family: 'VerJar';">Veronica</h1>
+            <h3 style="color: white; font-family: 'VerJar';">Ashish Kumar Verma</h3>
+            <h3 style="color: white; font-family: 'VerJar';">CPU Temp: 23</h3>
+        </div>
+        <div>
+            <h1 style="color: white; font-family: 'VerJar';">GPU: Nvidia</h1>
+            <h3 style="color: white; font-family: 'VerJar';">Aplha intialized</h3>
+            <h3 style="color: white; font-family: 'VerJar';">Chipset Configured</h3>
+        </div>
+    </div>
+
+    <div style="height: 80vh; display: flex; flex-direction: column; justify-content: end; text-align: center;">
+        <h3 style="color: white; font-family: 'VerJar';font-size: 32px; letter-spacing: 6px;" id="responseText"></h3>
+
+
+    </div>
+
+    <script src="speechRecognise.js"></script>
+
+
+    <script src="flight.js"></script>
+
+    <script>
+
+        function speakFunction(msgText) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(msgText));
+        }
+
+        function setResultText(text) {
+            document.getElementById("responseText").innerText = text;
+
+        }
+
+        window.onload = function () {
+            document.body.backgroundImage = "url('https://i.pinimg.com/originals/11/eb/3b/11eb3b0be11ea7265f9cfc217411c167.gif');"
+
+            speakFunction("Hello Ashish... ! I am Veronica.. System Intializing Please wait !");
+            speakFunction("CPU Temperature: 67 degrees");
+            speakFunction("GPU accelerator enabled");
+            speakFunction("System ready.. Let's get to the work !!")
+
+        }
+
+        async function wolframeAplhaFunction(text) {
+            console.log("https://api.wolframalpha.com/v1/result?appid=G3PE54-VKYR55XQ2J&i=" + text);
+            const requestt = await fetch("https://api.wolframalpha.com/v1/result?appid=G3PE54-VKYR55XQ2J&i=" + text);
+            const response = await requestt.text();
+            if (response != "No short answer available" && response != "Wolfram|Alpha did not understand your input") {
+                speakFunction(response);
+                setResultText(response);
+            } else {
+                speakFunction("Sorry, Ashish I don't know the answer... And that's your mistake.. you didn't train me for this sir");
+                setResultText("Sorry, Ashish I don't know the answer... And that's your mistake.. you didn't train me for this sir");
+            }
+
+        }
+
+        let responseGiven = "";
+
+        function processTheText(text) {
+            speakFunction(text);
+            text = text.toLowerCase();
+            var splitText = text.split(" ");
+            transcripEnd = "";
+            try {
+                speakFunction(eval(text));
+                setResultText(eval(text));
+            } catch {
+                if (splitText.indexOf("interact") != -1) {
+                    fetch("http://localhost:9090/interact?text=" + text)
+                } else if (splitText.indexOf("hey") != -1 || splitText.indexOf("hi") != -1) {
+                    speakFunction("Hello Sir");
+                    setResultText("Hello Sir");
+                } else if (splitText.indexOf("wikipedia") != -1) {
+                    responseGiven = "Opening Wikipedia"
+                    speakFunction(responseGiven);
+                    setResultText(responseGiven);
+                    fetch("http://localhost:9090/wikipedia?text=" + text);
+                }
+
+                else {
+                    wolframeAplhaFunction(text);
+
+                }
+            }
+
+
+
+        }
+
+        var recognition = new window.webkitSpeechRecognition();
+        recognition.interimResults = true;
+
+        recognition.onstart = function () {
+            console.log("Voice Recognition Started");
+        }
+
+        let transcripEnd = "";
+
+        recognition.onresult = function (event) {
+            var transcript = event.results[0][0].transcript;
+            transcripEnd = transcript
+            setResultText(transcripEnd)
+
+        }
+
+        recognition.onend = function (event) {
+            console.log("END");
+            console.log(transcripEnd);
+            if (transcripEnd.length != 0) {
+                processTheText(transcripEnd);
+
+            }
+        }
+
+        recognition.addEventListener("end", recognition.start);
+
+        recognition.start();
+
+        setInterval(function () {
+            transcripEnd = "";
+        }, 7000);
+
+        // const artyom = new Artyom();
+
+        // // Add a single command
+        // var commandHello = {
+        //     indexes: ["hello", "good morning", "hey"], // These spoken words will trigger the execution of the command
+        //     action: function () { // Action to be executed when a index match with spoken word
+        //         artyom.say("Hey buddy ! How are you today?");
+        //     }
+        // };
+
+        // artyom.addCommands(commandHello); // Add the command with addCommands method. Now
+
+        // // Or add multiple commands at time
+        // var myGroup = [
+        //     {
+        //         description: "If my database contains the name of a person say something",
+        //         smart: true, // a Smart command allow you to use wildcard in order to retrieve words that the user should say
+        //         // Ways to trigger the command with the voice
+        //         indexes: ["Do you know who is *", "I don't know who is *", "Is * a good person"],
+        //         // Do something when the commands is triggered
+        //         action: function (i, wildcard) {
+        //             var database = ["Carlos", "Bruce", "David", "Joseph", "Kenny"];
+
+        //             //If the command "is xxx a good person" is triggered do, else
+        //             if (i == 2) {
+        //                 if (database.indexOf(wildcard.trim())) {
+        //                     artyom.say("I'm a machine, I dont know what is a feeling");
+        //                 } else {
+        //                     artyom.say("I don't know who is " + wildcard + " and i cannot say if is a good person");
+        //                 }
+        //             } else {
+        //                 if (database.indexOf(wildcard.trim())) {
+        //                     artyom.say("Of course i know who is " + wildcard + ". A really good person");
+        //                 } else {
+        //                     artyom.say("My database is not big enough, I don't know who is " + wildcard);
+        //                 }
+        //             }
+        //         }
+        //     },
+        //     {
+        //         indexes: ["What time is it", "Is too late"],
+        //         action: function (i) { // var i returns the index of the recognized command in the previous array
+        //             if (i == 0) {
+        //                 aFunctionThatSaysTheTime(new Date());
+        //             } else if (i == 1) {
+        //                 artyom.say("Never is too late to do something my friend !");
+        //             }
+        //         }
+        //     }
+        // ];
+
+        // artyom.addCommands(myGroup);
+
+    </script>
+
+</body>
+
+</html>
