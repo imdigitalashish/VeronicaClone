@@ -55,7 +55,9 @@
     <script>
 
         function speakFunction(msgText) {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(msgText));
+            var msg = new SpeechSynthesisUtterance();
+            msg.text = msgText;
+            window.speechSynthesis.speak(msg);
         }
 
         function setResultText(text) {
@@ -81,7 +83,7 @@
                 speakFunction(response);
                 setResultText(response);
             } else {
-                speakFunction("Sorry, Ashish I don't know the answer... And that's your mistake.. you didn't train me for this sir");
+                speakFunction("Sorry, Ashish I don't know the answer");
                 setResultText("Sorry, Ashish I don't know the answer... And that's your mistake.. you didn't train me for this sir");
             }
 
@@ -90,7 +92,7 @@
         let responseGiven = "";
 
         function processTheText(text) {
-            speakFunction(text);
+            // speakFunction(text);
             text = text.toLowerCase();
             var splitText = text.split(" ");
             transcripEnd = "";
