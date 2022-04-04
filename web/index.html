@@ -48,14 +48,16 @@
     </div>
 
     <script src="speechRecognise.js"></script>
-
+    <script src="../eel.js"></script>
 
     <script src="flight.js"></script>
 
     <script>
+        var msg = new SpeechSynthesisUtterance();
+
 
         function speakFunction(msgText) {
-            var msg = new SpeechSynthesisUtterance();
+            window.speechSynthesis.cancel();
             msg.text = msgText;
             window.speechSynthesis.speak(msg);
         }
@@ -105,7 +107,12 @@
                 } else if (splitText.indexOf("hey") != -1 || splitText.indexOf("hi") != -1) {
                     speakFunction("Hello Sir");
                     setResultText("Hello Sir");
-                } else if (splitText.indexOf("wikipedia") != -1) {
+                } else if (["ok", "fine"].includes(text.toLowerCase())) {
+                    responseGiven = "Ok sir !"
+                    speakFunction(responseGiven)
+                    setResultText(responseGiven)
+                }
+                else if (splitText.indexOf("wikipedia") != -1) {
                     responseGiven = "Opening Wikipedia"
                     speakFunction(responseGiven);
                     setResultText(responseGiven);

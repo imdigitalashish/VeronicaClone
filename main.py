@@ -1,31 +1,16 @@
-import string
-import webbrowser
-from fastapi import FastAPI
-import psutil
-app = FastAPI()
+import eel
+import ctypes
+user32 = ctypes.windll.user32
+screensize = user32.GetSystemMetrics(78), user32.GetSystemMetrics(79)
 
 
-@app.get("/cpu")
-async def returnCpuTem():
-    t = psutil.cpu_times_percent
-    return t
+print(screensize)
 
 
-@app.get("/interact")
-async def interact(text:str):
-    wordList = text.lower().split()
-    print(text)
-    print(wordList)
-    print("youtube" in wordList)
-    if "youtube" in wordList :
-        webbrowser.open("https://youtube.com")
-    if "twitter" in wordList:
-        webbrowser.open("https://twitter.com")
+eel.init("web")
 
 
 
-@app.get("/wikipedia")
-async def searchWiki(text:str):
-    wordList = text.lower().split()
-    index_to_filter = wordList.index("wikipedia")
-    webbrowser.open("https://en.wikipedia.org/wiki/"+"".join(wordList[index_to_filter+1:]))
+
+
+eel.start("index.html", size=screensize)
