@@ -77,17 +77,42 @@
 
         }
 
+        let headers = new Headers();
+
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+
+        headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+        headers.append('Access-Control-Allow-Credentials', 'true');
+
+        headers.append('GET', 'POST', 'OPTIONS');
+
+
         async function wolframeAplhaFunction(text) {
             console.log("https://api.wolframalpha.com/v1/result?appid=G3PE54-VKYR55XQ2J&i=" + text);
-            const requestt = await fetch("https://api.wolframalpha.com/v1/result?appid=G3PE54-VKYR55XQ2J&i=" + text);
-            const response = await requestt.text();
-            if (response != "No short answer available" && response != "Wolfram|Alpha did not understand your input") {
-                speakFunction(response);
-                setResultText(response);
-            } else {
-                speakFunction("Sorry, Ashish I don't know the answer");
-                setResultText("Sorry, Ashish I don't know the answer... And that's your mistake.. you didn't train me for this sir");
-            }
+
+
+            const requestt = eel.wolframeAlphaResponse(text)(function (response) {
+                if (response != "No short answer available" && response != "Wolfram|Alpha did not understand your input") {
+                    speakFunction(response);
+                    setResultText(response);
+                } else {
+                    eel.returnResponse(text)(function (botResponse) {
+                        console.log(botResponse);
+                        speakFunction(botResponse);
+                        setResultText(botResponse);
+                    })
+                }
+            })
+            // const response = await requestt.text();
+            // if (response != "No short answer available" && response != "Wolfram|Alpha did not understand your input") {
+            //     speakFunction(response);
+            //     setResultText(response);
+            // } else {
+            //     eel.returnResponse(text)(function (botResponse) {
+            //         console.log(botResponse);
+            //     })
+            // }
 
         }
 
