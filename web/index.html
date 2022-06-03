@@ -104,19 +104,15 @@
                     })
                 }
             })
-            // const response = await requestt.text();
-            // if (response != "No short answer available" && response != "Wolfram|Alpha did not understand your input") {
-            //     speakFunction(response);
-            //     setResultText(response);
-            // } else {
-            //     eel.returnResponse(text)(function (botResponse) {
-            //         console.log(botResponse);
-            //     })
-            // }
-
         }
 
         let responseGiven = "";
+
+        async function fetchCovidDetails() {
+            let response = await fetch("https://api.covid19api.com/summary");
+            let responseGot = await response.json();
+            return responseGot;
+        }
 
         function processTheText(text) {
             // speakFunction(text);
@@ -142,6 +138,10 @@
                     speakFunction(responseGiven);
                     setResultText(responseGiven);
                     fetch("http://localhost:9090/wikipedia?text=" + text);
+                } else if (splitText.indexOf("hand") != -1) {
+                    responseGiven = "Your hand is in left side of yours infront of your right monitor";
+                    speakFunction(responseGiven)
+                    setResultText(responseGiven)
                 }
 
                 else {

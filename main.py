@@ -1,4 +1,5 @@
 from copyreg import constructor
+import json
 import eel
 import ctypes
 user32 = ctypes.windll.user32
@@ -34,5 +35,11 @@ def returnResponse(input):
 def wolframeAlphaResponse(input):
     request = requests.get("https://api.wolframalpha.com/v1/result?appid=G3PE54-VKYR55XQ2J&i="+input)
     return request.text
+
+@eel.expose
+def getCovid19Summary(input):
+    request = requests.get("https://api.covid19api.com/summary")
+    response = json.loads(request)
+    return response["Global"]
 
 eel.start("index.html", size=screensize)
