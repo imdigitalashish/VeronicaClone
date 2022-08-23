@@ -14,3 +14,5 @@ Then to run the app
 ```
 python main.py
 ```
+
+[![Watch the video](https://img.youtube.com/vi/qYJ_QsvPsT0/hqdefault.jpg)](https://www.youtube.com/watch?v=qYJ_QsvPsT0&ab_channel=AshishKumarVerma)
